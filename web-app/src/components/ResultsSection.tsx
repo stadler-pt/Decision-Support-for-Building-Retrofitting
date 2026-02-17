@@ -1,21 +1,8 @@
-import { Sun, Leaf, ArrowRight, RotateCcw, Lightbulb, TrendingUp } from "lucide-react";
+import { ArrowRight, RotateCcw, Lightbulb, TrendingUp, Star } from "lucide-react";
 import { Button } from "./ui/button";
 import ScoreGauge from "./ScoreGauge";
 import ScenarioCard from "./ScenarioCard";
-
-interface Scenario {
-  key: string;
-  label: string;
-  applicable: boolean;
-  reason: string;
-  ee_after: number;
-  uplift: number;
-}
-
-interface ResultsData {
-  ee_now: number;
-  scenarios: Scenario[];
-}
+import type { ResultsData } from "@/pages/Index";
 
 interface ResultsSectionProps {
   data: ResultsData;
@@ -23,15 +10,12 @@ interface ResultsSectionProps {
 }
 
 const ResultsSection = ({ data, onReset }: ResultsSectionProps) => {
-  // Sort scenarios by uplift descending
-  const sortedScenarios = [...data.scenarios].sort((a, b) => b.uplift - a.uplift);
+  // Use top_recommendations if available, otherwise fall back to all scenarios sorted by uplift
+  const topRecs = data.top_recommendations?.length
+    ? data.top_recommendations
+    : [...data.scenarios].filter((s) => s.uplift > 0).sort((a, b) => b.uplift - a.uplift).slice(0, 3);
 
-  const insights = [
-    "Low roof insulation is affecting your score. Adding more insulation could improve efficiency significantly.",
-    "Your glazing may be allowing heat loss. Modern double or triple glazing can make a big difference.",
-    "Consider upgrading your heating system to a more efficient model.",
-    "Solar panels could help reduce your electricity costs and carbon footprint.",
-  ];
+  const allScenarios = [...data.scenarios].sort((a, b) => b.uplift - a.uplift);
 
   return (
     <section className="py-12 animate-fade-up">
@@ -39,20 +23,46 @@ const ResultsSection = ({ data, onReset }: ResultsSectionProps) => {
         {/* Score Gauge */}
         <ScoreGauge score={data.ee_now} />
 
-        {/* Improvement Scenarios */}
+        {/* Top Recommendations */}
+        {topRecs.length > 0 && (
+          <div className="mt-12">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-10 h-10 rounded-xl bg-warning/20 flex items-center justify-center">
+                <Star className="w-5 h-5 text-warning" />
+              </div>
+              <div>
+                <h3 className="text-xl font-bold text-foreground">Top Recommendations</h3>
+                <p className="text-sm text-muted-foreground">Highest-impact improvements for your home</p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {topRecs.map((scenario, index) => (
+                <ScenarioCard
+                  key={scenario.key}
+                  scenario={scenario}
+                  index={index}
+                  currentScore={data.ee_now}
+                />
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* All Scenarios */}
         <div className="mt-12">
           <div className="flex items-center gap-3 mb-6">
             <div className="w-10 h-10 rounded-xl gradient-eco flex items-center justify-center">
               <TrendingUp className="w-5 h-5 text-primary-foreground" />
             </div>
             <div>
-              <h3 className="text-xl font-bold text-foreground">Recommended Improvements</h3>
-              <p className="text-sm text-muted-foreground">Sorted by impact on your score</p>
+              <h3 className="text-xl font-bold text-foreground">All Improvement Scenarios</h3>
+              <p className="text-sm text-muted-foreground">Every scenario analysed for your property</p>
             </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {sortedScenarios.map((scenario, index) => (
+            {allScenarios.map((scenario, index) => (
               <ScenarioCard
                 key={scenario.key}
                 scenario={scenario}
@@ -63,53 +73,12 @@ const ResultsSection = ({ data, onReset }: ResultsSectionProps) => {
           </div>
         </div>
 
-        {/* Insights Section */}
-        <div className="mt-12 animate-fade-up" style={{ animationDelay: '0.5s' }}>
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-10 h-10 rounded-xl bg-warning/20 flex items-center justify-center">
-              <Lightbulb className="w-5 h-5 text-warning" />
-            </div>
-            <h3 className="text-xl font-bold text-foreground">Key Insights</h3>
-          </div>
-
-          <div className="bg-card rounded-2xl shadow-eco border border-border/50 p-6">
-            <ul className="space-y-4">
-              {insights.map((insight, index) => (
-                <li
-                  key={index}
-                  className="flex items-start gap-3 animate-fade-in opacity-0"
-                  style={{ 
-                    animationDelay: `${0.6 + index * 0.1}s`,
-                    animationFillMode: 'forwards'
-                  }}
-                >
-                  <ArrowRight className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
-                  <span className="text-foreground">{insight}</span>
-                </li>
-              ))}
-            </ul>
-
-            {/* SDG Connection */}
-            <div className="mt-6 p-4 bg-secondary/50 rounded-xl">
-              <div className="flex items-center gap-2 mb-2">
-                <Sun className="w-5 h-5 text-warning" />
-                <Leaf className="w-5 h-5 text-primary" />
-              </div>
-              <p className="text-sm text-muted-foreground">
-                These improvements support <strong>SDG 7 (Affordable and Clean Energy)</strong> by 
-                cutting your energy bills and reducing carbon emissions. Small changes in your 
-                home can make a big difference for the planet!
-              </p>
-            </div>
-          </div>
-        </div>
-
         {/* Disclaimer and Reset */}
         <div className="mt-12 text-center animate-fade-in" style={{ animationDelay: '0.8s' }}>
           <p className="text-sm text-muted-foreground mb-6">
-            ⚠️ <em>Estimate only; please consult qualified professionals for accurate assessments and installations.</em>
+            <em>Estimate only; please consult qualified professionals for accurate assessments and installations.</em>
           </p>
-          
+
           <Button
             variant="outline"
             size="lg"
