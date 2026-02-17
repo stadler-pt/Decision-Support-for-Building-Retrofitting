@@ -13,7 +13,7 @@ from pydantic import BaseModel, Field
 BASE_DIR = Path(__file__).resolve().parent.parent
 MODEL_DIR = BASE_DIR / "models"
 
-MODEL_PATH = MODEL_DIR / "ee_model.joblib"
+MODEL_PATH = MODEL_DIR / "xgboost_ee_model.joblib"
 COLS_PATH = MODEL_DIR / "feature_columns.json"
 
 model = joblib.load(MODEL_PATH)
