@@ -6,6 +6,7 @@ import numpy as np
 import pandas as pd
 import joblib
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
 
@@ -22,6 +23,13 @@ with open(COLS_PATH, "r", encoding="utf-8") as f:
     EXPECTED_COLUMNS: List[str] = json.load(f)
 
 app = FastAPI(title="EPC EE API", version="1.0")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["https://green-home-score-production.up.railway.app"],
+    allow_methods=["POST"],
+    allow_headers=["Content-Type"],
+)
 
 
 # Helpers
