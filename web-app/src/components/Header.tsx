@@ -13,7 +13,7 @@ const Header = () => {
               <Leaf className="absolute -top-1 -right-1 w-4 h-4 text-accent animate-bounce-gentle" />
             </div>
             <div>
-              <h1 className="text-xl md:text-2xl font-bold text-gradient">
+              <h1 className="text-xl md:text-2xl font-bold">
                 Home Energy Efficiency Advisor
               </h1>
               <p className="text-xs text-muted-foreground hidden sm:block">
@@ -25,7 +25,6 @@ const Header = () => {
           <div className="flex items-center gap-2 animate-fade-in stagger-2">
             <div className="hidden md:flex items-center gap-1 px-3 py-1.5 bg-secondary rounded-full">
               <Zap className="w-4 h-4 text-accent" />
-              <span className="text-sm font-medium text-secondary-foreground">UK EPC Data</span>
             </div>
           </div>
         </div>

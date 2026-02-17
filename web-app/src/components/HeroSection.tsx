@@ -22,29 +22,14 @@ const HeroSection = () => {
           <div className="animate-fade-up">
             <h2 className="text-3xl md:text-5xl font-bold mb-6 leading-tight">
               Discover Your Home's{" "}
-              <span className="text-gradient">Energy Potential</span>
+              <span className="">Energy Potential</span>
             </h2>
             <p className="text-lg md:text-xl text-muted-foreground mb-8 leading-relaxed">
               Enter your home details to get an estimated energy efficiency score and 
               personalized tips to go greener. Powered by AI for sustainable living.
             </p>
           </div>
-
-          {/* SDG Badges */}
-          <div className="flex items-center justify-center gap-4 animate-fade-in stagger-3">
-            <div className="flex items-center gap-2 px-4 py-2 bg-card rounded-full shadow-eco border border-border/50">
-              <div className="w-8 h-8 rounded-full bg-warning/20 flex items-center justify-center">
-                <Sun className="w-4 h-4 text-warning" />
-              </div>
-              <span className="text-sm font-medium">SDG 7</span>
-            </div>
-            <div className="flex items-center gap-2 px-4 py-2 bg-card rounded-full shadow-eco border border-border/50">
-              <div className="w-8 h-8 rounded-full bg-accent/20 flex items-center justify-center">
-                <Home className="w-4 h-4 text-accent" />
-              </div>
-              <span className="text-sm font-medium">SDG 11</span>
-            </div>
-          </div>
+          
         </div>
       </div>
     </section>
